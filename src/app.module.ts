@@ -7,11 +7,9 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
-    MongooseModule.forRoot(
-      `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.sdz7m.mongodb.net/${process.env.MONGO_COLLECTION}?retryWrites=true&w=majority`,
-    ),
+    MongooseModule.forRoot(process.env.MONGO_URL),
   ],
   controllers: [AppController],
   providers: [AppService],
