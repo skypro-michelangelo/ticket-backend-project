@@ -59,13 +59,18 @@ export class EventsService {
     return 'Билеты закончились';
   }
 
-  async addTicket(dto: CreateTicketDto): Promise<Tickets> {
-    const event = await this.eventsModel.findById(dto.eventId);
+  async getTicketById(id: ObjectId) {
+    const ticket = await this.ticketsModel.findById(id);
+    return ticket;
+  }
+
+  async addTicket(id: ObjectId, dto: CreateTicketDto): Promise<Tickets> {
+    const event = await this.eventsModel.findById(id);
     console.log(event.tickets_number);
     event.tickets_number -= 1;
     await event.save();
 
-    const ticket = await this.ticketsModel.create({ ...dto });
+    const ticket = await this.ticketsModel.create({ ...dto, event: event._id });
     event.tickets.push(ticket._id);
     await event.save();
     return ticket;

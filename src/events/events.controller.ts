@@ -60,8 +60,13 @@ export class EventsController {
     return this.eventsService.getTicket(id);
   }
 
-  @Post('/ticket/buy')
-  addTicket(@Body() dto: CreateTicketDto) {
-    return this.eventsService.addTicket(dto);
+  @Get('ticket/:id')
+  getTicketById(@Param('id') id: ObjectId) {
+    return this.eventsService.getTicketById(id);
+  }
+
+  @Post(':id/ticket/buy')
+  addTicket(@Param('id') id: ObjectId, @Body() dto: CreateTicketDto) {
+    return this.eventsService.addTicket(id, dto);
   }
 }
