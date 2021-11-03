@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { CreateTicketDto } from 'src/events/dto/create-ticket.dto';
@@ -53,24 +53,29 @@ export class EventsService {
 
   async getTicket(id: ObjectId) {
     const event = await this.eventsModel.findById(id);
-    if (event.tickets_number > 0) {
-      return `Осталось билетов ${event.tickets_number}`;
+    if (event.tickets_number <= 0) {
+      throw new HttpException('Tickets are out', HttpStatus.NOT_FOUND);
     }
-    return 'Билеты закончились';
+
+    return event.tickets_number;
   }
 
   async getTicketById(id: ObjectId) {
     const ticket = await this.ticketsModel.findById(id);
+    console.log(ticket);
+
+    if (!ticket) {
+      throw new HttpException('Not Acceptable', HttpStatus.NOT_ACCEPTABLE);
+    }
     return ticket;
   }
 
   async addTicket(id: ObjectId, dto: CreateTicketDto): Promise<Tickets> {
     const event = await this.eventsModel.findById(id);
-    console.log(event.tickets_number);
     event.tickets_number -= 1;
     await event.save();
 
-    const ticket = await this.ticketsModel.create({ ...dto, event: event._id });
+    const ticket = await this.ticketsModel.create({ ...dto, event: event });
     event.tickets.push(ticket._id);
     await event.save();
     return ticket;
