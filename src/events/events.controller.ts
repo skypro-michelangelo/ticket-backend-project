@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import {
   Body,
   Controller,
@@ -6,7 +9,13 @@ import {
   Param,
   Post,
   Put,
+  UploadedFiles,
+  UseInterceptors,
+  Query,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { ObjectId } from 'mongoose';
+import { CreateTicketDto } from 'src/events/dto/create-ticket.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
@@ -16,31 +25,43 @@ import { Events } from './schemas/events.schema';
 export class EventsController {
   constructor(private eventsService: EventsService) {}
 
+  @Post('create')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'picture', maxCount: 1 }]))
+  create(@UploadedFiles() files, @Body() dto: CreateEventDto): Promise<Events> {
+    const { picture } = files;
+    return this.eventsService.create(dto, picture[0]);
+  }
+
   @Get()
-  getAll(): Promise<Events[]> {
-    return this.eventsService.getAllEvents();
+  getAll(@Query('count') count: number, @Query('offset') offset: number) {
+    return this.eventsService.getAll(count, offset);
   }
 
   @Get(':id')
-  get(@Param('id') id: string): Promise<Events> {
-    return this.eventsService.getEvent(id);
+  getOne(@Param('id') id: ObjectId): Promise<Events> {
+    return this.eventsService.getOne(id);
   }
 
-  @Post('create')
-  create(@Body() eventDto: CreateEventDto): Promise<Events> {
-    return this.eventsService.createEvent(eventDto);
+  @Delete(':id/delete')
+  delete(@Param('id') id: ObjectId): Promise<Events> {
+    return this.eventsService.delete(id);
   }
 
-  @Put('update/:id')
+  @Put(':id/update')
   update(
-    @Body() updateDto: UpdateEventDto,
-    @Param('id') id: string,
+    @Body() dto: UpdateEventDto,
+    @Param('id') id: ObjectId,
   ): Promise<Events> {
-    return this.eventsService.update(id, updateDto);
+    return this.eventsService.update(id, dto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<Events> {
-    return this.eventsService.remove(id);
+  @Get(':id/ticket')
+  getTicket(@Param('id') id: ObjectId) {
+    return this.eventsService.getTicket(id);
+  }
+
+  @Post('/ticket/buy')
+  addTicket(@Body() dto: CreateTicketDto) {
+    return this.eventsService.addTicket(dto);
   }
 }
