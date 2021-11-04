@@ -10,17 +10,8 @@ import {
   UseInterceptors,
   Query,
 } from '@nestjs/common';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
-import {
-  ApiBody,
-  ApiConsumes,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { ArchiveEventDto } from './dto/archive-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -29,7 +20,7 @@ import { EventsService } from './events.service';
 import { Event } from './schemas/events.schema';
 import { Ticket } from './schemas/tickets.schema';
 
-@Api Tags('events')
+@ApiTags('events')
 @Controller('events')
 export class EventsController {
   constructor(private eventsService: EventsService) {}
