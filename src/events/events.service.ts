@@ -93,7 +93,6 @@ export class EventsService {
     }
 
     const event = await this.eventsModel.findById(ticket.event);
-    console.log(ticket);
 
     return { ticket, event };
   }

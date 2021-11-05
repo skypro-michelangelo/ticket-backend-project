@@ -76,7 +76,7 @@ export class EventsController {
     return this.eventsService.delete(id);
   }
 
-  @Put(':id/in_archive')
+  @Put(':id/archive')
   @ApiParam({ name: 'id', required: true })
   @ApiResponse({ status: 200, description: 'archive event', type: Event })
   archive(

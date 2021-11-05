@@ -9,7 +9,7 @@ export type TicketsDocument = Ticket & Document;
 @Schema()
 export class Ticket {
   @ApiProperty({ type: () => Event })
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Events' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Event' })
   event: Event;
 }
 
