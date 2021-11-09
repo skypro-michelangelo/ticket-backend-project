@@ -8,9 +8,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Проект СкайТикет')
-    .setDescription('Команда Микеланджело')
+    .setDescription('Бэкенд проекта')
     .setVersion('1.0.0')
-    .addTag('Бэкенд проекта')
+    .addTag('Команда Микеланджело')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
