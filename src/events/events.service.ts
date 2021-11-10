@@ -5,6 +5,7 @@ import { Ticket, TicketsDocument } from 'src/events/schemas/tickets.schema';
 import { FileService, FileType } from 'src/file/file.service';
 import { ArchiveEventDto } from './dto/archive-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event, EventsDocument } from './schemas/events.schema';
 
@@ -75,15 +76,20 @@ export class EventsService {
     };
   }
 
-  async addTicket(id: ObjectId): Promise<Ticket> {
+  async addTicket(id: ObjectId, createTicketDto: CreateTicketDto) {
     const event = await this.eventsModel.findById(id);
-
-    const ticket = await this.ticketsModel.create({ event: event });
-    event.tickets.push(ticket._id);
-    event.tickets_number -= 1;
-
-    await event.save();
-    return ticket;
+    const tickets = [];
+    for (let i = 0; i < createTicketDto.number; i++) {
+      tickets[i] = await this.ticketsModel.create({
+        ...createTicketDto,
+        event: event,
+      });
+      tickets.push(tickets[i]);
+      event.tickets.push(tickets[i]._id);
+      event.tickets_number -= 1;
+      await event.save();
+    }
+    return tickets;
   }
 
   async getTicketById(id: ObjectId): Promise<object> {
