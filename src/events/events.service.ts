@@ -79,16 +79,17 @@ export class EventsService {
   async addTicket(id: ObjectId, createTicketDto: CreateTicketDto) {
     const event = await this.eventsModel.findById(id);
     const tickets = [];
-    for (let i = 0; i < createTicketDto.number; i++) {
-      tickets[i] = await this.ticketsModel.create({
+    for (let i = 1; i <= createTicketDto.number; i++) {
+      const ticket = await this.ticketsModel.create({
         ...createTicketDto,
         event: event,
       });
-      tickets.push(tickets[i]);
-      event.tickets.push(tickets[i]._id);
-      event.tickets_number -= 1;
-      await event.save();
+      tickets.push(ticket);
     }
+
+    tickets.map((ticket) => event.tickets.push(ticket._id));
+    event.tickets_number -= createTicketDto.number;
+    await event.save();
     return tickets;
   }
 
