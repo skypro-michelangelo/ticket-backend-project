@@ -15,6 +15,7 @@ import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { ArchiveEventDto } from './dto/archive-event.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventsService } from './events.service';
 import { Event } from './schemas/events.schema';
@@ -104,8 +105,11 @@ export class EventsController {
   @Post(':id/ticket/buy')
   @ApiParam({ name: 'id', required: true })
   @ApiResponse({ status: 200, description: 'create ticket', type: Ticket })
-  addTicket(@Param('id') id: ObjectId): Promise<Ticket> {
-    return this.eventsService.addTicket(id);
+  addTicket(
+    @Param('id') id: ObjectId,
+    @Body() createTicketDto: CreateTicketDto,
+  ) {
+    return this.eventsService.addTicket(id, createTicketDto);
   }
 
   @Get('ticket/:id/validate')
