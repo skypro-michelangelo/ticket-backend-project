@@ -13,27 +13,35 @@ export class Event {
 
   @Prop()
   @ApiProperty({ type: String })
-  date: string;
+  date_time: string;
 
   @Prop()
   @ApiProperty({ type: String })
-  time: string;
+  description: string;
 
   @Prop()
   @ApiProperty({ type: Number })
+  location: string;
+
+  @Prop()
+  @ApiProperty({ type: String })
   tickets_number: number;
 
   @Prop()
   @ApiProperty({ type: String })
-  status: string;
+  type_event: string;
 
   @Prop()
-  @ApiProperty({ type: Boolean })
-  in_archive: boolean;
+  @ApiProperty({ type: String })
+  price: string;
 
   @Prop()
   @ApiProperty({ type: String })
   picture: string;
+
+  @Prop()
+  @ApiProperty({ type: Boolean })
+  in_archive: boolean;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tickets' }] })
   @ApiProperty({ type: () => [Ticket] })
