@@ -24,7 +24,9 @@ import { TokenModule } from './token/token.module';
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL),
+    MongooseModule.forRoot(
+      'mongodb+srv://Maria:12345@cluster0.sdz7m.mongodb.net/test?retryWrites=true&w=majority',
+    ),
     TokenModule,
     EventsModule,
     FileModule,

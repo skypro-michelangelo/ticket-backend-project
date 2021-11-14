@@ -20,11 +20,11 @@ export class Event {
   description: string;
 
   @Prop()
-  @ApiProperty({ type: Number })
+  @ApiProperty({ type: String })
   location: string;
 
   @Prop()
-  @ApiProperty({ type: String })
+  @ApiProperty({ type: Number })
   tickets_number: number;
 
   @Prop()
